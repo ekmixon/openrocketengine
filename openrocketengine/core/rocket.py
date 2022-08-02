@@ -92,21 +92,9 @@ class Engine:
         self.gamma = gamma
         # geometric parameters
         self.lstar = lstar
-        if area_ratio is not None:
-            self.contraction_area_ratio = area_ratio  # chamber contraction area ratio
-        else:
-            self.contraction_area_ratio = 5  # nondimensional
-
-        if contraction_angle is not None:
-            self.contraction_angle = contraction_angle  # in degrees
-        else:
-            self.contraction_angle = 60  # degrees
-
-        if bell_length is not None:
-            self.bell_length = bell_length
-        else:
-            self.bell_length = 0.8
-
+        self.contraction_area_ratio = area_ratio if area_ratio is not None else 5
+        self.contraction_angle = 60 if contraction_angle is None else contraction_angle
+        self.bell_length = bell_length if bell_length is not None else 0.8
         if self.pa is None:
             self.pa = self.pe
 
@@ -462,16 +450,14 @@ class Engine:
     def contraction_area_ratio(self):
         """ The contraction area ratio is the value of Ac/Ae. A minimum value of 3 is recommended
         to consistently achieve mach 1 in the throat """
-        if self.__contraction_area_ratio:
-            return self.__contraction_area_ratio
-        else:
+        if not self.__contraction_area_ratio:
             self.__contraction_area_ratio = self.__Ac / self.__Ae
             if self.__contraction_area_ratio < 3:
                 print(
                     "Warning: A minimum area contraction ratio of 3 is recommended. \
                       Use the Ae or contraction area ratio setter to change the value of Ac"
                 )
-            return self.__contraction_area_ratio
+        return self.__contraction_area_ratio
 
     @contraction_area_ratio.setter
     def contraction_area_ratio(self, value):

@@ -32,7 +32,8 @@ def read_config(fname):
     """
     assert os.path.isfile(
         fname
-    ), "Error: {} does not exist in the working directory".format(fname)
+    ), f"Error: {fname} does not exist in the working directory"
+
     with open(fname, "r") as f:
         config = f.read()
 
@@ -50,13 +51,11 @@ def read_config(fname):
             pass
 
     # Parse through the data and convert types
-    for key in configuration.keys():
+    for key in configuration:
         try:
             std_type = standard_types[key]
         except KeyError:
-            raise Exception(
-                "Error: {} is not a known configuration parameter".format(key)
-            )
+            raise Exception(f"Error: {key} is not a known configuration parameter")
 
         if std_type != type(configuration[key]):
             configuration[key] = std_type(configuration[key])
